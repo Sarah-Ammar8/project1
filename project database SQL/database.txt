@@ -1,0 +1,306 @@
+// انشاء مستخدم واعطائه الصلاحيات
+create user Clinic identified by Clinic ;
+grant dba to Clinic ;
+
+// العيادة
+create table Clinic (
+ClinicID number primary key,
+CName varchar2(40));
+
+//مرضى
+create table Patient(
+PatientID number primary key,
+FirstName varchar2(30),
+LastName varchar2(30),
+DateOfBirth date,
+Gender varchar2(10),
+Phone number(9,0),
+Address varchar2(50));
+
+// اطباء
+create table Doctor(
+DoctorID number primary key,
+ClinicID number ,
+FirstName varchar2(30),
+LastName varchar2(30),
+Specialty varchar2(50),
+Gender varchar2(10),
+Phone1 number(9,0),
+Phone2 number(9,0),
+Email varchar2(50),
+Sal number(15), 
+foreign key (ClinicID) 
+References Clinic(ClinicID)
+);
+
+//  الحالات
+create table Treatment(
+TreatmentID number primary key,
+Name varchar2(100),
+Description varchar2(1000),
+Cost number(20,2));
+
+// الادوية
+create table Medication(
+MedicationID number primary key,
+Name varchar2(100),
+Form varchar2(50),
+SidEffects varchar2(500),
+ExpiryDate date,
+Cost number(20,2));
+
+// سجلات طبية
+create table MedicalRecord(
+RecordID number primary key,
+PatientID number ,
+Diagnosis varchar2(500),
+foreign key (PatientID) 
+References Patient(PatientID));
+
+// الفواتير
+create table Bill(
+BillID number primary key,
+PatientID number ,
+TreatmentID number ,
+Amount number(15,2),
+foreign key (PatientID) 
+References Patient(PatientID),
+foreign key (TreatmentID) 
+References Treatment(TreatmentID)
+);
+
+// المواعيد
+create table Appointment(
+AppointmentsID number primary key,
+DoctorID number ,
+PatientID number ,
+AppointmentDate date,
+Status varchar2(50),
+foreign key (DoctorID) 
+References Doctor(DoctorID),
+foreign key (PatientID) 
+References Patient(PatientID)
+);
+
+// الوصفات الطبية
+create table Perscription(
+RecordID number ,
+MedicationID number ,
+Quantity number,
+foreign key (RecordID) 
+References MedicalRecord(RecordID),
+foreign key (MedicationID) 
+References Medication(MedicationID)
+);
+
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+CLINIC                         TABLE
+PATIENT                        TABLE
+DOCTOR                         TABLE
+TREATMENT                      TABLE
+MEDICATION                     TABLE
+MEDICALRECORD                  TABLE
+BILL                           TABLE
+APPOINTMENT                    TABLE
+PERSCRIPTION                   TABLE
+
+SQL> desc CLINIC;
+   النوع          خالي                                                                     الاسم
+ ----------------------------------------- -------- ----------------------------
+ CLINICID                                  NOT NULL NUMBER
+ CNAME                                              VARCHAR2(40)
+
+SQL> desc PATIENT;
+ النوع          خالي                                                                     الاسم
+----------------------------------------- -------- ----------------------------
+PATIENTID                                 NOT NULL NUMBER
+FIRSTNAME                                          VARCHAR2(30)
+LASTNAME                                           VARCHAR2(30)
+DATEOFBIRTH                                        DATE
+GENDER                                             VARCHAR2(10)
+PHONE                                              NUMBER(9)
+ADDRESS                                            VARCHAR2(50)
+
+SQL> desc DOCTOR;
+ النوع          خالي                                                                     الاسم
+ ----------------------------------------- -------- ----------------------------
+ DOCTORID                                  NOT NULL NUMBER
+ CLINICID                                           NUMBER
+ FIRSTNAME                                          VARCHAR2(30)
+ LASTNAME                                           VARCHAR2(30)
+ SPECIALTY                                          VARCHAR2(50)
+ GENDER                                             VARCHAR2(10)
+ PHONE1                                             NUMBER(9)
+ PHONE2                                             NUMBER(9)
+ EMAIL                                              VARCHAR2(50)
+  SAL                                                NUMBER(15)
+
+SQL> desc TREATMENT;
+النوع          خالي                                                                       الاسم
+----------------------------------------- -------- ----------------------------
+ TREATMENTID                               NOT NULL NUMBER
+ NAME                                               VARCHAR2(100)
+ DESCRIPTION                                        VARCHAR2(1000)
+ COST                                               NUMBER(20,2)
+
+SQL> desc MEDICATION;
+النوع          خالي                                                                       الاسم
+----------------------------------------- -------- ----------------------------
+MEDICATIONID                              NOT NULL NUMBER
+NAME                                               VARCHAR2(100)
+FORM                                               VARCHAR2(50)
+SIDEFFECTS                                         VARCHAR2(500)
+EXPIRYDATE                                         DATE
+COST                                               NUMBER(20,2)
+
+SQL> desc MEDICALRECORD;
+النوع          خالي                                                                       الاسم
+----------------------------------------- -------- ----------------------------
+RECORDID                                  NOT NULL NUMBER
+PATIENTID                                          NUMBER
+DIAGNOSIS                                          VARCHAR2(500)
+
+SQL> desc BILL;
+النوع          خالي                                                                       الاسم 
+----------------------------------------- -------- ----------------------------
+BILLID                                    NOT NULL NUMBER
+PATIENTID                                          NUMBER
+TREATMENTID                                        NUMBER
+AMOUNT                                             NUMBER(15,2)
+
+SQL> desc APPOINTMENT;
+النوع          خالي                                                                       الاسم 
+----------------------------------------- -------- ----------------------------
+APPOINTMENTSID                            NOT NULL NUMBER
+DOCTORID                                           NUMBER
+PATIENTID                                          NUMBER
+APPOINTMENTDATE                                    DATE
+STATUS                                             VARCHAR2(50)
+
+SQL> desc PERSCRIPTION;
+النوع          خالي                                                                       الاسم 
+----------------------------------------- -------- ----------------------------
+RECORDID                                           NUMBER
+MEDICATIONID                                       NUMBER
+QUANTITY                                           NUMBER
+
+///////////////                                       
+insert into CLINIC
+values 
+(1,'Saba');
+
+insert into CLINIC
+values
+(2,'Alaml');
+//////////////
+INSERT INTO PATIENT 
+VALUES
+ (1, 'Ahmad', 'Mohomed', TO_DATE('1988-01-01', 'YYYY-MM-DD'), 'male', 775435672, 'shamlan');
+
+ INSERT INTO PATIENT
+ VALUES 
+(2, 'Salh', 'Ahsad', TO_DATE('1999-08-11', 'YYYY-MM-DD'), 'male', 775498772, 'mathbah');
+
+ INSERT INTO PATIENT
+ VALUES 
+(3, 'Shima', 'Ammar', TO_DATE('1997-06-21', 'YYYY-MM-DD'), 'female', 775111672, 'amran');
+
+ INSERT INTO PATIENT 
+VALUES 
+(4, 'Mohomed', 'Ahmad', TO_DATE('2005-10-18', 'YYYY-MM-DD'), 'male', 779885672, 'asr');
+
+ INSERT INTO PATIENT 
+VALUES 
+(5, 'Roz', 'Omr', TO_DATE('2000-03-29', 'YYYY-MM-DD'), 'female', 775435552, 'alrbat');
+//////////////
+INSERT INTO DOCTOR 
+VALUES
+ (1,1, 'Mlak', 'Bsher','Surgery' , 'female', 775553372,718763372, 'mlakbsher33.com',200000);
+
+INSERT INTO DOCTOR 
+VALUES
+ (2,2, 'ammar', 'Alsamadi','Surgery' , 'male', 778805372,710063372, 'ammaralsamadi77.com',300000);
+/////////////
+
+INSERT INTO TREATMENT 
+VALUES
+(1,'mmm',null,5000);
+
+INSERT INTO TREATMENT 
+VALUES
+(2,'ccc',null,9000);
+/////////////
+
+INSERT INTO MEDICATION 
+VALUES
+(1,'valtaren','pills',null,TO_DATE('2025-03-1', 'YYYY-MM-DD'),1500);
+
+INSERT INTO MEDICATION 
+VALUES
+(2,'amol','pills',null,TO_DATE('2026-03-1', 'YYYY-MM-DD'),200);
+//////////////
+
+INSERT INTO MEDICALRECORD 
+VALUES
+(1,1,'wrm');
+
+INSERT INTO MEDICALRECORD 
+VALUES
+(2,2,'wrm in head');
+
+INSERT INTO MEDICALRECORD 
+VALUES
+(3,3,'back');
+
+INSERT INTO MEDICALRECORD 
+VALUES
+(4,4,'back');
+
+INSERT INTO MEDICALRECORD 
+VALUES
+(5,5,'cinser');
+/////////////
+
+INSERT INTO bill 
+VALUES
+(1,5,1,100000);
+/////////////////
+INSERT INTO APPOINTMENT 
+VALUES
+(1,2,1,TO_DATE('2024-03-1', 'YYYY-MM-DD'),'twara');
+
+////////////////////////
+
+INSERT INTO PERSCRIPTION 
+VALUES
+(1,2,1);
+///////////////////////
+  
+// منظور لعرض تفاصيل المرضى مع مواعيدهم
+
+CREATE VIEW PatientAppointment AS 
+SELECT  
+    Patient.PatientID,
+    Patient.FirstName,
+    Patient.LastName,
+    Appointment.AppointmentDate,
+    Doctor.FirstName AS DoctorFirstName,
+    Doctor.LastName AS DoctorLastName
+FROM 
+    Patient
+JOIN 
+    Appointment ON Patient.PatientID = Appointment.PatientID
+JOIN 
+    Doctor ON Appointment.DoctorID = Doctor.DoctorID;
+
+/////////////////////////
+//انشاء مستخدم جديد
+create user users identified by users; 
+
+/////////////////////////
+// اعطاء صلاحيات للمستخدم الجديد
+grant select,update on PatientAppointment to users;
