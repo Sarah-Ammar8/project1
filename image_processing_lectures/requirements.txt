@@ -2,4 +2,4 @@ streamlit
 PIL
 numpy 
 os
-cv2
+OpenCV 
