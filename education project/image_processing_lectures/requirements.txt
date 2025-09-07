@@ -1,4 +1,5 @@
 streamlit
 PIL
 numpy 
- os
+os
+cv2
