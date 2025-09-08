@@ -1,4 +1,6 @@
-streamlit
-opencv-python-headles
-numpy 
+ 
 pandas
+streamlit
+opencv-python-headless
+Pillow
+numpy
